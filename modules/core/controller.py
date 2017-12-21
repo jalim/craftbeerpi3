@@ -74,6 +74,14 @@ class ControllerBase(object):
 
 class KettleController(ControllerBase, ActorController, SensorController):
 
+    @staticmethod
+    def chart(kettle):
+        result = []
+        result.append({"name": "Temp", "data_type": "sensor", "data_id": kettle.sensor})
+        result.append({"name": "Target Temp", "data_type": "kettle", "data_id": kettle.id})
+
+        return result
+
     def __init__(self, *args, **kwds):
         ControllerBase.__init__(self, *args, **kwds)
         self.kettle_id = kwds.get("kettle_id")
@@ -107,6 +115,13 @@ class KettleController(ControllerBase, ActorController, SensorController):
 
 class FermenterController(ControllerBase, ActorController, SensorController):
 
+    @staticmethod
+    def chart(fermenter):
+        result = []
+        result.append({"name": "Temp", "data_type": "sensor", "data_id": fermenter.sensor})
+        result.append({"name": "Target Temp", "data_type": "fermenter", "data_id": fermenter.id})
+        return result
+
     def __init__(self, *args, **kwds):
         ControllerBase.__init__(self, *args, **kwds)
         self.fermenter_id = kwds.get("fermenter_id")
@@ -124,7 +139,7 @@ class FermenterController(ControllerBase, ActorController, SensorController):
     def heater_on(self, power=100):
         f = self.api.cache.get("fermenter").get(self.fermenter_id)
         if f.heater is not None:
-            self.actor_on(int(f.heater))
+            self.actor_on(power, int(f.heater))
 
     @cbpi.try_catch(None)
     def heater_off(self):

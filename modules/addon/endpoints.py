@@ -166,7 +166,9 @@ def update_addon(name):
 
 def loadCorePlugins():
     for filename in os.listdir("./modules/base_plugins"):
-        if filename.endswith(".py") or filename.endswith(".pyc"):
+
+
+        if os.path.isdir("./modules/base_plugins/"+filename) is False:
             continue
         try:
             modules[filename] = import_module("modules.base_plugins.%s" % (filename))
@@ -178,7 +180,7 @@ def loadCorePlugins():
 
 def loadPlugins():
     for filename in os.listdir("./modules/plugins"):
-        if filename.endswith(".py") or filename.endswith(".pyc"):
+        if os.path.isdir("./modules/plugins/" + filename) is False:
             continue
         try:
             modules[filename] = import_module("modules.plugins.%s" % (filename))
@@ -186,9 +188,8 @@ def loadPlugins():
             cbpi.notify("Failed to load plugin %s " % filename, str(e), type="danger", timeout=None)
             cbpi.app.logger.error(e)
 
-@cbpi.initalizer(order=1)
-def initPlugins(app):
-
+#@cbpi.initalizer(order=1)
+def initPlugins():
     loadCorePlugins()
     loadPlugins()
 
